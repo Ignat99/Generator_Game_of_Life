@@ -6,5 +6,6 @@ Graphical interface for input file generation toad.life
 
 Need pythom module python-tk
 
-```apt-get install python-tk
+```sh
+apt-get install python-tk
 ```
