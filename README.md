@@ -2,6 +2,10 @@
 
 Graphical interface for input file generation toad.life
 
+## Table of Contents
+
+- [Modules](#Modules)
+
 ## Modules
 
 Need pythom module python-tk
