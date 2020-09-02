@@ -16,16 +16,6 @@ def gen_addr(gen_ii, gen_jj):
     else:
         return gen_ii * (gen_width / gen_cell_size) + gen_jj
 
-#def gen_mark_fields():
-    """ Mark hidden fields """
-"""
-    for i in xrange(gen_field_height):
-        for j in xrange(gen_field_width):
-            if gen_canvas.gettags(gen_cell_matrix[gen_addr(i, j)])[0] == 'vis':
-                gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=NORMAL, tags=('vis', 'to_vis'))
-            else:
-                gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=HIDDEN, tags=('hid', 'to_hid'))
-"""
 
 def gen_mark_fields_advance(board):
     """ Mark hidden fields """
@@ -76,7 +66,6 @@ def gen_generate():
     """ Generate toad.life file """
     board = gen_life_file()
     board = advance(board, [3], [2,3])
-#    gen_mark_fields()
     gen_mark_fields_advance(board)
     gen_repaint()
 
