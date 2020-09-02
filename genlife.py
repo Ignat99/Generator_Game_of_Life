@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """ Graphical interface for input file generator """
 from Tkinter import Tk, Canvas, Button, Frame, BOTH, NORMAL, HIDDEN
-from gameoflife import neighbors, advance
+from gameoflife import advance
 
 def gen_draw(gen_e):
     """ Draw the Game """
@@ -16,18 +16,19 @@ def gen_addr(gen_ii, gen_jj):
     else:
         return gen_ii * (gen_width / gen_cell_size) + gen_jj
 
-def gen_mark_fields():
+#def gen_mark_fields():
     """ Mark hidden fields """
+"""
     for i in xrange(gen_field_height):
         for j in xrange(gen_field_width):
             if gen_canvas.gettags(gen_cell_matrix[gen_addr(i, j)])[0] == 'vis':
                 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=NORMAL, tags=('vis', 'to_vis'))
             else:
                 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=HIDDEN, tags=('hid', 'to_hid'))
+"""
 
 def gen_mark_fields_advance(board):
     """ Mark hidden fields """
-    print board
     for i in xrange(gen_field_height):
         for j in xrange(gen_field_width):
             if (i, j) in board:
@@ -126,13 +127,11 @@ gen_canvas.itemconfig(gen_cell_matrix[gen_addr(4, 2)], state=NORMAL, tags='vis')
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(4, 3)], state=NORMAL, tags='vis')
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(4, 4)], state=NORMAL, tags='vis')
 # Add board. It is diferent representation the game fild
-#board = set([(3, 3), (3, 4), (3, 5), (4, 2), (4, 3), (4, 4)])
 board = set()
 
 
 # Setup frame of window and buttons
 gen_frame = Frame(gen_root)
-#gen_button1 = Button(gen_frame, text='Generate', command= lambda: gen_generate(board))
 gen_button1 = Button(gen_frame, text='Generate', command=gen_generate)
 gen_button2 = Button(gen_frame, text='Clear', command=gen_clear)
 gen_button1.pack(side='left')
