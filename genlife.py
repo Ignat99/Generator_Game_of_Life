@@ -1,5 +1,7 @@
+#!/usr/bin/python
 """ Graphical interface for input file generator """
 from Tkinter import Tk, Canvas, Button, Frame, BOTH, NORMAL, HIDDEN
+from gameoflife import neighbors, advance
 
 def gen_draw(gen_e):
     """ Draw the Game """
@@ -23,6 +25,16 @@ def gen_mark_fields():
             else:
                 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=HIDDEN, tags=('hid', 'to_hid'))
 
+def gen_mark_fields_advance(board):
+    """ Mark hidden fields """
+    print board
+    for i in xrange(gen_field_height):
+        for j in xrange(gen_field_width):
+            if (i, j) in board:
+                gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=NORMAL, tags=('vis', 'to_vis'))
+            else:
+                gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=HIDDEN, tags=('hid', 'to_hid'))
+
 
 def gen_repaint():
     """ Paint game field """
@@ -31,11 +43,12 @@ def gen_repaint():
             if gen_canvas.gettags(gen_cell_matrix[gen_addr(i, j)])[1] == 'to_hid':
                 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=HIDDEN, tags=('hid', '0'))
             if gen_canvas.gettags(gen_cell_matrix[gen_addr(i, j)])[1] == 'to_vis':
-                gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=NORMAL, tags=('hid', '0'))
+                gen_canvas.itemconfig(gen_cell_matrix[gen_addr(i, j)], state=NORMAL, tags=('vis', '0'))
 
 
 def gen_life_file():
     """ Generate file toad.live """
+    newstate = set()
 # Open file
     gen_f = open(gen_file, 'w')
 # Write comments
@@ -47,6 +60,7 @@ def gen_life_file():
         for j in xrange(gen_field_width):
             if gen_canvas.gettags(gen_cell_matrix[gen_addr(i, j)])[0] == 'vis':
                 gen_str = gen_str + 'O'
+                newstate.add((i, j))
             else:
                 gen_str = gen_str + '.'
 # Write string of file
@@ -54,12 +68,15 @@ def gen_life_file():
 
 #Close file
     gen_f.close()
+    return newstate
 
 
 def gen_generate():
     """ Generate toad.life file """
-    gen_life_file()
-    gen_mark_fields()
+    board = gen_life_file()
+    board = advance(board, [3], [2,3])
+#    gen_mark_fields()
+    gen_mark_fields_advance(board)
     gen_repaint()
 
 def gen_clear():
@@ -100,6 +117,7 @@ for i in xrange(gen_field_height):
 gen_fict_square = gen_canvas.create_rectangle(0, 0, 0, 0, state=HIDDEN, tags=('hid', '0'))
 gen_cell_matrix.append(gen_fict_square)
 
+
 # Add glider
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(3, 3)], state=NORMAL, tags='vis')
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(3, 4)], state=NORMAL, tags='vis')
@@ -107,9 +125,14 @@ gen_canvas.itemconfig(gen_cell_matrix[gen_addr(3, 5)], state=NORMAL, tags='vis')
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(4, 2)], state=NORMAL, tags='vis')
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(4, 3)], state=NORMAL, tags='vis')
 gen_canvas.itemconfig(gen_cell_matrix[gen_addr(4, 4)], state=NORMAL, tags='vis')
+# Add board. It is diferent representation the game fild
+#board = set([(3, 3), (3, 4), (3, 5), (4, 2), (4, 3), (4, 4)])
+board = set()
+
 
 # Setup frame of window and buttons
 gen_frame = Frame(gen_root)
+#gen_button1 = Button(gen_frame, text='Generate', command= lambda: gen_generate(board))
 gen_button1 = Button(gen_frame, text='Generate', command=gen_generate)
 gen_button2 = Button(gen_frame, text='Clear', command=gen_clear)
 gen_button1.pack(side='left')
